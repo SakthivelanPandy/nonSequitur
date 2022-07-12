@@ -1,6 +1,10 @@
 import re, sys
 
-f_name = sys.argv[1] or input()
+try:
+    f_name = sys.argv[1]
+except IndexError:
+    f_name = input()
+
 with open(f_name) as file:
 
     program = file.readlines()
