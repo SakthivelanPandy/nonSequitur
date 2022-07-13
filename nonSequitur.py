@@ -7,6 +7,23 @@ except IndexError:
 
 with open(f_name) as file:
 
+    def split_line(line):
+        word = ""
+        split = []
+        for i in line.split():
+            if i[-1:] == "\"":
+                word += i
+                split.append(word)
+                word = ""
+            elif i[:1] == "\"":
+                word += i
+                word += " "
+            else:
+                split.append(i)
+        return split
+                
+
+
     program = file.readlines()
     
     '''search through file for word MARKER and add line number and line to dictionary'''
@@ -25,7 +42,7 @@ with open(f_name) as file:
     while True:
         current_line = program[line_num]
 
-        for word in current_line.split():
+        for word in split_line(current_line):
             if word[0] == "$":
                 current_line = current_line.replace(word, str(variables[word[1:]]))
             elif word[0] == "(" and word[1]=="$":
@@ -38,16 +55,16 @@ with open(f_name) as file:
             
         
         if current_line.startswith("GOTO "):
-            if len(current_line.split()) > 3 and current_line.split()[2] == "IF":
-                if current_line.split()[3] == "True":
-                    next_marker = current_line.split()[1]
+            if len(split_line(current_line)) > 3 and split_line(current_line)[2] == "IF":
+                if split_line(current_line)[3] == "True":
+                    next_marker = split_line(current_line)[1]
                     line_num = markers.get(next_marker)
                     continue
                 else:
                     line_num += counter
                     line_num = line_num%no_of_lines
                     continue
-            next_marker = current_line.split()[1]
+            next_marker = split_line(current_line)[1]
             line_num = markers.get(next_marker)
             continue
         
@@ -55,13 +72,13 @@ with open(f_name) as file:
             break
 
         if current_line.startswith("COUNTER "):
-            counter = int(current_line.split()[1])
+            counter = int(split_line(current_line)[1])
 
         if current_line.startswith("VAR "):
-            variables[current_line.split()[1]] = current_line.split()[2]
+            variables[split_line(current_line)[1]] = split_line(current_line)[2]
 
         if current_line.startswith("PRINT"):
-            [print(i, end = " ") for i in current_line.split()[1:]]
+            [print(i, end = " ") for i in split_line(current_line)[1:]]
             print("\n")
 
         
