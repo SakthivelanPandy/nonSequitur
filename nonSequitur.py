@@ -77,6 +77,9 @@ with open(f_name) as file:
         if current_line.startswith("VAR "):
             variables[split_line(current_line)[1]] = split_line(current_line)[2]
 
+        if current_line.startswith("INPUT "):
+            variables[split_line(current_line)[1]] = input()
+
         if current_line.startswith("PRINT"):
             [print(i, end = " ") for i in split_line(current_line)[1:]]
             print("\n")
